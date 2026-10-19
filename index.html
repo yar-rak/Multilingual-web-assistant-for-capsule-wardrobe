@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ t.title }}</title>
+    <style>
+        body { margin: 0; background: #f7f4ef; color: #2b2725; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 500px 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            align-items: start;
+        }
+
+        .side-panel img {
+            width: 100%;
+            height: calc(100vh - 80px);
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 40px;
+        }
+
+        main {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        h1 { text-align: center; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #8c827a; margin-bottom: 30px; font-size: 14px; }
+        
+        label { display: block; margin: 20px 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #8c827a; }
+        
+        input, select, button { 
+            width: 100%; padding: 14px; border: 1px solid #e3decb; border-radius: 10px; font-size: 15px; 
+            background: #faf9f6; box-sizing: border-box; 
+        }
+
+        button { background: #2b2725; color: white; margin-top: 25px; cursor: pointer; border: none; font-weight: bold; }
+        button:hover { background: #514a45; }
+
+        .result { margin-top: 30px; padding: 20px; background: #faf9f6; border-left: 4px solid #2b2725; border-radius: 8px; }
+        .error { margin-top: 20px; color: #b32e25; text-align: center; }
+
+        @media (max-width: 1100px) {
+            .wrapper { grid-template-columns: 1fr; }
+            .side-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <aside class="side-panel">
+        <img src="{{ url_for('static', filename='images/' + left_img) }}" alt="Fashion">
+    </aside>
+
+    <main>
+        <h1>{{ t.title }}</h1>
+        <p class="subtitle">{{ t.subtitle }}</p>
+
+        <form method="post">
+            <label>{{ t.language }}</label>
+            <select name="lang" onchange="this.form.submit()">
+                <option value="ru" {% if lang == "ru" %}selected{% endif %}>Русский</option>
+                <option value="en" {% if lang == "en" %}selected{% endif %}>English</option>
+                <option value="fr" {% if lang == "fr" %}selected{% endif %}>Français</option>
+            </select>
+
+            <label>{{ t.city }}</label>
+            <input type="text" name="city" value="{{ city }}" placeholder="{{ t.city_placeholder }}" required>
+
+            <label>{{ t.style }}</label>
+            <select name="style">
+                <option value="casual" {% if style == "casual" %}selected{% endif %}>{{ t.casual }}</option>
+                <option value="business" {% if style == "business" %}selected{% endif %}>{{ t.business }}</option>
+                <option value="streetwear" {% if style == "streetwear" %}selected{% endif %}>{{ t.streetwear }}</option>
+            </select>
+
+            <button type="submit">{{ t.button }}</button>
+        </form>
+
+        {% if error %} <p class="error">{{ error }}</p> {% endif %}
+
+        {% if result %}
+        <div class="result">
+            <p><strong>{{ t.weather }}:</strong> {{ weather_text }}</p>
+            <h3>{{ t.result }}</h3>
+            <p style="white-space: pre-line; line-height: 1.8;">{{ result }}</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <aside class="side-panel">
+        <img src="{{ url_for('static', filename='images/' + right_img) }}" alt="Fashion">
+    </aside>
+</div>
+</body>
+</html>
